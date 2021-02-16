@@ -1,0 +1,26 @@
+library(readxl)
+NFL_Team_Details <- read_excel("E:/Data_to_Explore/NFL_Team_Details.xlsx")
+
+View(NFL_Team_Details)
+library(readxl)
+top_3_rounds_2021 <- read_excel("E:/Football_Analysis/top_3_rounds_2021.xlsx")
+View(top_3_rounds_2021)
+
+library(ggplot2)
+library(tidyverse)
+
+top_3 = edit(top_3_rounds_2021) #change variable 'NFL team' to 'team_name'
+
+joined_picks = NFL_Team_Details%>%
+full_join(top_3, by = "team_name")
+
+
+first_three = joined_picks%>%
+count(Tm)
+
+first_three = edit(first_three) # change variable 'n' to 'num_picks
+
+data_needed = full_join(NFL_Team_Details, first_three, by = "Tm")
+View(data_needed)
+
+ggplot(data_needed ,aes(num_picks, Tm))+geom_col(aes(fill = Color_Main))+scale_color_identity(aesthetics = ( "fill"))+labs(title = "Number of Draft Picks in First 3 Rounds", subtitle = "In 2021 NFL Draft;(NE forfeits pick 77; no compensatory picks; no minority compensation)", x = "Number of Picks", y = "", caption = "By: Drezdan Dale | Data Source: Wikipedia")+ theme_bw()
